@@ -10,7 +10,7 @@ using Tables, PrettyTables
 ##### Implementation
 #####
 
-const TrackingTimerElType = @NamedTuple{name::String,time::Float64,gcfraction::Float64,
+const TrackingTimerElType = @NamedTuple{name::String,time::Float64,gctime::Float64,
                                         n_allocs::Int,bytes::Int,thread_id::Int,pid::Int}
 
 """
@@ -64,7 +64,7 @@ julia> pmap(f_inst, 1:10)
 
 julia> t
 TrackingTimer: 2.54 s since creation (0% measured).
- name   time   gctime  n_allocs    allocs    thread ID  proc ID 
+ name   time   gcfraction  n_allocs    allocs    thread ID  proc ID 
 ────────────────────────────────────────────────────────────────
  f     0.00 s      0%         2  23.516 KiB          1        3
  f     0.00 s      0%         1  15.750 KiB          1        2
@@ -120,7 +120,7 @@ macro timeit(t, name, expr)
     quote
         local results = @timed $(esc(expr))
         put!($(esc(t)),
-             (; name=$(esc(name)), results.time, gcfraction=results.gctime / results.time,
+             (; name=$(esc(name)), results.time, results.gctime,
               n_allocs=Base.gc_alloc_count(results.gcstats), results.bytes,
               thread_id=Threads.threadid(), pid=myid()))
         results.value
@@ -173,12 +173,14 @@ results in `t`.
 
 nt_keys(::Type{NamedTuple{K,V}}) where {K,V} = K
 
-function formatter(v, i, j)
-    col = nt_keys(TrackingTimerElType)[j]
-    col == :time && return @sprintf("%.2f s", v)
-    col == :gcfraction && return string(@sprintf("%.0f", v * 100), "%")
-    col == :bytes && return Base.format_bytes(v)
-    return v
+function formatter(tbl)
+    return function(v, i, j)
+        col = nt_keys(TrackingTimerElType)[j]
+        col == :time && return @sprintf("%.2f s", v)
+        col == :gctime && return string(@sprintf("%.0f", (v / tbl[i].time) * 100), "%")
+        col == :bytes && return Base.format_bytes(v)
+        return v
+    end
 end
 
 one_line_show(io::IO, ::TrackingTimer) = print(io, "TrackingTimer(…)")
@@ -186,10 +188,7 @@ one_line_show(io::IO, ::TrackingTimer) = print(io, "TrackingTimer(…)")
 Base.show(io::IO, t::TrackingTimer) = one_line_show(io, t)
 
 function Base.show(io::IO, ::MIME"text/plain", t::TrackingTimer)
-    if get(io, :compact, false)
-        one_line_show(io, t)
-        return nothing
-    end
+    get(io, :compact, false) === true && return one_line_show(io, t)
     total_time_in_seconds = (time_ns() - t.start_nanosecond) * 1e-9
     tbl = Tables.rows(t)
     tot_measured_time = isempty(tbl) ? 0.0 : sum(x.time for x in tbl)
@@ -203,7 +202,7 @@ function Base.show(io::IO, ::MIME"text/plain", t::TrackingTimer)
         tbl_sorted = sort(tbl; by=x -> x.time, rev=true)
         pretty_table(io, tbl_sorted,
                      ["name" "time" "gctime" "n_allocs" "allocs" "thread ID" "proc ID"];
-                     newline_at_end=false, formatters=formatter, hlines=[1], vlines=[],
+                     newline_at_end=false, formatters=formatter(tbl), hlines=[1], vlines=[],
                      alignment=[:l, (:r for _ in 1:(length(tbl_sorted[1]) - 1))...],
                      header_alignment=:c)
     end
