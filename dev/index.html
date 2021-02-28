@@ -30,8 +30,7 @@ TrackingTimer: 1.08 s since creation (93% measured).
  func            0.00 s      0%         0    0 bytes          1        1</code></pre><h3 id="Threaded-example"><a class="docs-heading-anchor" href="#Threaded-example">Threaded example</a><a id="Threaded-example-1"></a><a class="docs-heading-anchor-permalink" href="#Threaded-example" title="Permalink"></a></h3><pre><code class="language-julia">julia&gt; using TrackingTimers, ThreadsX, LinearAlgebra
 
 julia&gt; t = TrackingTimer()
-
-TrackingTimer: 1.14 s since creation (0% measured).
+TrackingTimer: 0.03 s since creation (0% measured).
 No entries.
 
 julia&gt; xs = 1:2
@@ -61,8 +60,7 @@ TrackingTimer: 5.69 s since creation (99% measured).
  expensive_function  1.15 s     34%  24886121    1.360 GiB          2        1
  expensive_function  0.71 s     18%  15721283  880.679 MiB          1        1
  expensive_function  0.66 s     36%  18870866    1.024 GiB          1        1
- expensive_function  0.58 s     16%  14264890  784.059 MiB          2        1
-</code></pre><h3 id="Distributed-example"><a class="docs-heading-anchor" href="#Distributed-example">Distributed example</a><a id="Distributed-example-1"></a><a class="docs-heading-anchor-permalink" href="#Distributed-example" title="Permalink"></a></h3><pre><code class="language-julia">julia&gt; using Distributed
+ expensive_function  0.58 s     16%  14264890  784.059 MiB          2        1</code></pre><h3 id="Distributed-example"><a class="docs-heading-anchor" href="#Distributed-example">Distributed example</a><a id="Distributed-example-1"></a><a class="docs-heading-anchor-permalink" href="#Distributed-example" title="Permalink"></a></h3><pre><code class="language-julia">julia&gt; using Distributed
 
 julia&gt; addprocs(2)
 2-element Vector{Int64}:
@@ -136,5 +134,4 @@ julia&gt; combine(groupby(df, :name), :time =&gt; mean)
      │ String              Float64   
 ─────┼───────────────────────────────
    1 │ expensive_function   0.920108
-   2 │ cheap_fn             4.85e-8
-</code></pre><p>Similarly, the timing results can be serialized by e.g. <code>CSV.write(path, t)</code> or <code>Arrow.write(path, t)</code>, thanks again to the Tables.jl interface.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 28 February 2021 21:51">Sunday 28 February 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+   2 │ cheap_fn             4.85e-8</code></pre><p>Similarly, the timing results can be serialized by e.g. <code>CSV.write(path, t)</code> or <code>Arrow.write(path, t)</code>, thanks again to the Tables.jl interface.</p></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="reference/">Reference »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Sunday 28 February 2021 23:01">Sunday 28 February 2021</span>. Using Julia version 1.5.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
