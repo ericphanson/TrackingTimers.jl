@@ -24,7 +24,7 @@ end
 @testset "Distributed" begin
     t = TrackingTimer()
 
-    @everywhere slp(s) = (sleep(s/100); s)
+    @everywhere slp(s) = (sleep(s / 100); s)
     slp_t = t(slp)
 
     slp_t(1)
@@ -45,7 +45,7 @@ end
     t = TrackingTimer()
 
     sqrt_t = t(sqrt)
-    result = @sync [ Threads.@spawn sqrt_t(i) for i = 1:10 ]
+    result = @sync [Threads.@spawn sqrt_t(i) for i in 1:10]
     @test fetch.(result) == sqrt.(1:10)
     TrackingTimers.synchronize!(t)
     @test length(t.results) == 10
@@ -54,7 +54,6 @@ end
     @test tids isa AbstractVector{Int}
     @test 2 ∈ tids
 end
-
 
 @testset "Transducers" begin
     t = TrackingTimer()
@@ -71,7 +70,7 @@ end
     @test procs() ⊆ pids
 
     TrackingTimers.synchronize!(t)
-    @test length(Tables.rows(t)) == 2*length(xs) == length(t.results)
+    @test length(Tables.rows(t)) == 2 * length(xs) == length(t.results)
 end
 
 @testset "Tables interface" begin
@@ -87,7 +86,8 @@ end
     @test Tables.rows(t) == t.results
 
     col_tbl = Tables.columns(t)
-    @test Tables.columnnames(col_tbl) == (:name, :time, :gctime, :n_allocs, :bytes, :thread_id, :pid)
+    @test Tables.columnnames(col_tbl) ==
+          (:name, :time, :gctime, :n_allocs, :bytes, :thread_id, :pid)
     @test col_tbl.name isa AbstractVector{String}
     @test col_tbl.time isa AbstractVector{Float64}
     @test Tables.getcolumn(col_tbl, :time) == col_tbl.time

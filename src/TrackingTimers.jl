@@ -174,7 +174,7 @@ results in `t`.
 nt_keys(::Type{NamedTuple{K,V}}) where {K,V} = K
 
 function formatter(tbl)
-    return function(v, i, j)
+    return function (v, i, j)
         col = nt_keys(TrackingTimerElType)[j]
         col == :time && return @sprintf("%.2f s", v)
         col == :gctime && return string(@sprintf("%.0f", (v / tbl[i].time) * 100), "%")
