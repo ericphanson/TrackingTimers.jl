@@ -1,3 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 TrackingTimers = "88ba133c-8695-4d62-9a5c-bcf16b6d2e1a"
+
+[compat]
+Documenter = "0.26"
