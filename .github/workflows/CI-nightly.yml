@@ -1,4 +1,4 @@
-name: CI
+name: CI (nightly)
 on:
   push:
     branches: "main"
@@ -16,7 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.5'
+          - "^1.6.0-0"
+          - 'nightly'
         os:
           - ubuntu-latest
         arch:
