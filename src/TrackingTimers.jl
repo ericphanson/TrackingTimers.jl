@@ -171,7 +171,7 @@ results in `t`.
 ##### Display
 #####
 
-nt_keys(::Type{NamedTuple{K,V}}) where {K, V} = K
+nt_keys(::Type{NamedTuple{K,V}}) where {K,V} = K
 
 function formatter(v, i, j)
     col = nt_keys(TrackingTimerElType)[j]
