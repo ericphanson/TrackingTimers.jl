@@ -79,7 +79,7 @@ TrackingTimer: 2.54 s since creation (0% measured).
 ```
 """
 struct TrackingTimer
-    start_nanosecond::Int
+    start_nanosecond::Int64
     chan::RemoteChannel{Channel{TrackingTimerElType}}
     results::Vector{TrackingTimerElType}
     results_lock::ReentrantLock
