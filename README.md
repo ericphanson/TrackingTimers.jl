@@ -8,6 +8,10 @@
 Provides a simple utility for collecting timing information from functions even in the presence of parallelism.
 Inspired by [TimerOutputs.jl](https://github.com/KristofferC/TimerOutputs.jl), which I recommend for serial code.
 
+`TrackingTimers.@timeit` supports the same API as `TimerOutputs.@timeit`, providing a simple way to store the timing results from executing an expression in a timer object, a `TrackingTimer` (which is the sole export of this package). However, `TrackingTimer`s are very simple; while calls to log to the same timer may be nested, the `TrackingTimer` simply logs each call in a flat table. This makes it easy to support multiprocess and multithreaded code. `TrackingTimer`s supports the Tables.jl interface (as a row table), which provides a simple means for the user to take a closer look at the timing data, and e.g. aggregate over calls to the same function.
+
+`TrackingTimer`s also support a call syntax, allowing one to easily instrument a function, so that any call to the instrumented version of the function automatically logs a timing entry to the timer object. See the examples below.
+
 ## Usage
 
 ```julia
@@ -172,3 +176,6 @@ julia> combine(groupby(df, :name), :time => mean)
    2 │ cheap_fn             4.85e-8
 
 ```
+
+
+Similarly, the timing results can be serialized by e.g. `CSV.write(path, t)` or `Arrow.write(path, t)`, thanks again to the Tables.jl interface.
