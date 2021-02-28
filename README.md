@@ -52,8 +52,7 @@ TrackingTimer: 1.08 s since creation (93% measured).
 julia> using TrackingTimers, ThreadsX, LinearAlgebra
 
 julia> t = TrackingTimer()
-
-TrackingTimer: 1.14 s since creation (0% measured).
+TrackingTimer: 0.03 s since creation (0% measured).
 No entries.
 
 julia> xs = 1:2
@@ -84,7 +83,6 @@ TrackingTimer: 5.69 s since creation (99% measured).
  expensive_function  0.71 s     18%  15721283  880.679 MiB          1        1
  expensive_function  0.66 s     36%  18870866    1.024 GiB          1        1
  expensive_function  0.58 s     16%  14264890  784.059 MiB          2        1
-
 ```
 
 ### Distributed example
@@ -174,7 +172,6 @@ julia> combine(groupby(df, :name), :time => mean)
 ─────┼───────────────────────────────
    1 │ expensive_function   0.920108
    2 │ cheap_fn             4.85e-8
-
 ```
 
 
