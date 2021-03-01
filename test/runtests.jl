@@ -8,7 +8,7 @@ nprocs() > 1 || addprocs(1)
 
 @everywhere using TrackingTimers
 
-@testset "Basics + `show`" begin
+@time @testset "Basics + `show`" begin
     t = TrackingTimer()
     @test sprint(show, t) == "TrackingTimer(…)"
     @test occursin("No entries.", sprint(show, MIME"text/plain"(), t))
@@ -21,7 +21,7 @@ nprocs() > 1 || addprocs(1)
     @test t.results[1].pid == 1
 end
 
-@testset "Distributed" begin
+@time @testset "Distributed" begin
     t = TrackingTimer()
 
     @everywhere slp(s) = (sleep(s / 100); s)
@@ -41,7 +41,7 @@ end
     @test 2 ∈ pids
 end
 
-@testset "Threaded" begin
+@time @testset "Threaded" begin
     t = TrackingTimer()
 
     sqrt_t = t(sqrt)
@@ -55,9 +55,9 @@ end
     @test 2 ∈ tids
 end
 
-@testset "Transducers" begin
+@time @testset "Transducers" begin
     t = TrackingTimer()
-    xs = 1:10000
+    xs = 1:1000
     sin_t = t(sin)
     t_result = foldxt(+, Map(sin_t), xs)
     tids = Tables.getcolumn(Tables.columns(t), :thread_id)
@@ -73,7 +73,7 @@ end
     @test length(Tables.rows(t)) == 2 * length(xs) == length(t.results)
 end
 
-@testset "Tables interface" begin
+@time @testset "Tables interface" begin
     t = TrackingTimer()
     xs = 1:10000
     sin_t = t(sin)
@@ -93,6 +93,6 @@ end
     @test Tables.getcolumn(col_tbl, :time) == col_tbl.time
 end
 
-@testset "Aqua tests" begin
+@time @testset "Aqua tests" begin
     Aqua.test_all(TrackingTimers; ambiguities=false)
 end
