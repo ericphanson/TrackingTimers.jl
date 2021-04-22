@@ -30,6 +30,6 @@ jobs:
               exit(0)
           else
               @error "Some files have not been formatted!"
-              @info out
+              write(stdout, out)
               exit(1)
           end'
