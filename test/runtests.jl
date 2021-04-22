@@ -62,7 +62,9 @@ end
     t_result = foldxt(+, Map(sin_t), xs)
     tids = Tables.getcolumn(Tables.columns(t), :thread_id)
 
-    @test (1:Threads.nthreads()) ⊆ tids
+    if Threads.nthreads() > 1
+        @test length(unique(tids)) >= 2
+    end
     @test length(Tables.rows(t)) == length(xs)
 
     d_result = foldxd(+, Map(sin_t), xs)
@@ -75,7 +77,7 @@ end
 
 @time @testset "Tables interface" begin
     t = TrackingTimer()
-    xs = 1:10000
+    xs = 1:1000
     sin_t = t(sin)
     foldxt(+, Map(sin_t), xs)
 
