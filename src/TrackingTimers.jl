@@ -64,7 +64,7 @@ julia> pmap(f_inst, 1:10)
 
 julia> t
 TrackingTimer: 2.54 s since creation (0% measured).
- name   time   gcfraction  n_allocs    allocs    thread ID  proc ID 
+ name   time   gcfraction  n_allocs    allocs    thread ID  proc ID
 ────────────────────────────────────────────────────────────────
  f     0.00 s      0%         2  23.516 KiB          1        3
  f     0.00 s      0%         1  15.750 KiB          1        2
@@ -200,9 +200,9 @@ function Base.show(io::IO, ::MIME"text/plain", t::TrackingTimer)
         print(io, "No entries.")
     else
         tbl_sorted = sort(tbl; by=x -> x.time, rev=true)
-        pretty_table(io, tbl_sorted,
-                     ["name", "time", "gctime", "n_allocs", "allocs", "thread ID",
-                      "proc ID"]; newline_at_end=false, formatters=formatter(tbl_sorted),
+        pretty_table(io, tbl_sorted;
+                     header=["name", "time", "gctime", "n_allocs", "allocs", "thread ID",
+                      "proc ID"], newline_at_end=false, formatters=formatter(tbl_sorted),
                      hlines=[1], vlines=[],
                      alignment=[:l, (:r for _ in 1:(length(tbl_sorted[1]) - 1))...],
                      header_alignment=:c)
