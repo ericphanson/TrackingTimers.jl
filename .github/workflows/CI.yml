@@ -1,4 +1,7 @@
 name: CI
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
 on:
   push:
     branches: "main"
@@ -17,8 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - '1.5'
-          - '1'
+          - '1.6' # LTS
+          - '1' # latest version
         os:
           - ubuntu-latest
         arch:

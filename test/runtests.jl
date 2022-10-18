@@ -60,6 +60,9 @@ end
     xs = 1:1000
     sin_t = t(sin)
     t_result = foldxt(+, Map(sin_t), xs)
+    # make sure we catch the pretty_table branch in the show method
+    header = "name   time   gctime  n_allocs   allocs    thread ID  proc ID"
+    @test occursin(header, sprint(show, MIME"text/plain"(), t))
     tids = Tables.getcolumn(Tables.columns(t), :thread_id)
 
     if Threads.nthreads() > 1
