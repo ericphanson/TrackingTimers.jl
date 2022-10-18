@@ -1,6 +1,6 @@
 name: format-check
 concurrency:
-  group: ${{ github.head_ref }}.yasg
+  group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 on:
   push:
