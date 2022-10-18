@@ -1,4 +1,7 @@
 name: format-check
+concurrency:
+  group: ${{ github.head_ref }}.yasg
+  cancel-in-progress: true
 on:
   push:
     branches:
@@ -9,27 +12,24 @@ on:
   pull_request:
 jobs:
   format-check:
-    name: Format check (${{ github.event_name }})
+    name: YASG Enforcement (Julia ${{ matrix.julia-version }} - ${{ github.event_name }})
+    # Run on push's or non-draft PRs
+    if: (github.event_name == 'push') || (github.event.pull_request.draft == false)
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    strategy:
+      matrix:
+        julia-version: [1.6]
     steps:
       - uses: julia-actions/setup-julia@latest
         with:
-          version: 1.6.0
+          version: ${{ matrix.julia-version }}
       - uses: actions/checkout@v1
       - name: Instantiate `format` environment and format
         run: |
-          julia  --project=format -e 'using Pkg; Pkg.instantiate()'
-          julia  --project=format 'format/run.jl'
-      - name: Format check
-        run: |
-          julia -e '
-          out = read(`git diff --name-only`, String)
-          if out == ""
-              exit(0)
-          else
-              @error "Some files have not been formatted!"
-              write(stdout, out)
-              exit(1)
-          end'
+          julia --project=format -e 'using Pkg; Pkg.instantiate()'
+          julia --project=format 'format/run.jl'
+      - uses: reviewdog/action-suggester@v1
+        if: github.event_name == 'pull_request'
+        with:
+          tool_name: JuliaFormatter
+          fail_on_error: true
