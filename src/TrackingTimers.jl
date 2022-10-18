@@ -202,7 +202,8 @@ function Base.show(io::IO, ::MIME"text/plain", t::TrackingTimer)
         tbl_sorted = sort(tbl; by=x -> x.time, rev=true)
         pretty_table(io, tbl_sorted;
                      header=["name", "time", "gctime", "n_allocs", "allocs", "thread ID",
-                      "proc ID"], newline_at_end=false, formatters=formatter(tbl_sorted),
+                             "proc ID"], newline_at_end=false,
+                     formatters=formatter(tbl_sorted),
                      hlines=[1], vlines=[],
                      alignment=[:l, (:r for _ in 1:(length(tbl_sorted[1]) - 1))...],
                      header_alignment=:c)
